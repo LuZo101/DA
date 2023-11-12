@@ -28,6 +28,63 @@
 	height: 100%;
 	z-index: 4;
 }
+.cell
+{
+	z-index: 5;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.cell_1
+{
+	background-color: rgba(241, 241, 241, 0.849);
+}
+.cell_2
+{
+	background-color: rgba(255, 255, 255, 0.801);
+}
+.cell_wall
+{
+	background-color: rgb(0, 0, 0);
+}
+.cell_algo
+{
+	box-shadow: 0px 0px 3px rgba(32, 53, 102, 0.692);
+	background-size: calc(100%) calc(100%);
+	background-color: rgb(39, 186, 245);
+}
+.cell_1.cell_path
+{
+	box-shadow: 0px 0px 2px rgba(15, 17, 4, 0.911);
+	background-color: rgb(251, 244, 79);
+}
+.cell_2.cell_path
+{
+	box-shadow: 0px 0px 2px rgba(61, 73, 8, 0.911);
+	background-color: rgb(245, 238, 73);
+}
+.cell_1.visited_cell
+{
+	background-color: rgb(81, 156, 202);
+}
+.cell_2.visited_cell
+{
+	background-color: rgb(81, 156, 202);
+}
+
+.startpunkt
+{
+	background-size: calc(100%) calc(100%);
+	background-color: rgb(73, 153, 91);
+}
+
+.zielpunkt
+{
+	background-size: calc(100%) calc(100%);
+	background-color: rgb(168, 39, 39);
+}
+
+
+
 /*/////////////////////////////////////////////////////////////////////// 
 // Menu
 */

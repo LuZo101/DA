@@ -1,10 +1,16 @@
 //////////////////////////////////////////////////////////////
 // Globale Variablen Liste
 
+//Webversion
 const startUpMaxGrid = 60;
 const borderSize = 34;
 const panelSize = 240;
 const panelSize2 = 240;
+
+//Mobileversion
+const startUpMaxGridMobile = 60;
+const panelMenuHightMobile = 250;
+
 
 
 let table;

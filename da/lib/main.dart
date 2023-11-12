@@ -38,9 +38,8 @@ class LandingPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const WebViewScreen(
-                          url:
-                              "https://schueler.bulme.at/~robin.titz/RStarAlgo/")),
+                      builder: (context) =>
+                          const WebViewScreen(url: "http://192.168.1.85:80")),
                 );
               },
               child: const Text('Zu den Algos'),

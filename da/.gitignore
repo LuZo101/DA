@@ -42,3 +42,23 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# Flutter/Dart related
+**/build/
+**/ios/Flutter/.last_build_id
+**/web/packages/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+pubspec.yaml.lock
+dart_tool/
+.vscode/
+.idea/
+*.iml
+.project
+.metadata
+.idea/
+.vscode/
+.dart_tool/
