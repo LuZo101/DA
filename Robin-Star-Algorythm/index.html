@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<script src="js/variables.js"></script>
+		<script src="js/mazeGenerator.js"></script>
+		<script src="js/mazeRunner.js"></script>
+		<script src="js/menu.js"></script>
+		<script src="js/visualizer.js"></script>		
+
+		<title>R-Star App</title>		
+		<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/maze.css"/>
+
+	</head>
+
+	<body>
+
+		<div id="menu">
+
+			<div id="comboBoxRunner" class="comboBoxRunner">
+				<span id="labelRunner" class="labelRunner">Maze Runner</span>
+
+				<label class="select" for="selectRunner">
+
+					<select id="selectRunner" required="required">
+						<option selected value="1">Best-First</option>
+						<option value="2">Dijkstra</option>
+						<option value="3">Tremaux</option>						
+						<option value="4">A-Star</option>
+					</select>
+				</label>
+			</div>
+			
+			<div id = button_1>
+				<button class="my_button" id="clear">Clear</button>
+			</div>
+
+			<div id = button_2>
+				<button class="my_button" id="play">Start</button>
+			</div>
+
+			<div id = input>
+				<span>Cells visited:</span>
+				<input type="text" id="visited_cells_counter" readonly>
+					
+				<br><br>
+				<span>Path Distance:</span>
+				<input type="text" id="finalpath_cells_counter" readonly>
+			
+				<br><br>
+				<span>Timer:</span><br>	
+				<div id="time_container">
+					<label id="minuten">0</label> m
+					<label id="sekunden">0</label> s
+					<label id="msekunden">0</label> ms
+				</div>			
+					
+			</div>
+			
+		</div>
+
+		<div id="visualizer">			
+			<div id="grid"></div>
+		</div>
+
+		<div id="menu2">
+
+			<div class="choice" id="choice_1">
+
+				<span class="choice_label" id="choice_label_2">Maze Generator</span>
+				<label class="select" for="generator">
+
+					<select id="generator" required="required">						
+						<option selected value="1">Depth-First</option>
+						<option value="2">Kruskals</option>
+						<option value="3">Prims</option>
+						<option value="4">Wilsons</option>
+						<option value="5">Aldous-Broder</option>
+						<option value="6">Recursive Div</option>
+					</select>
+				</label>
+			</div>
+
+			<div id = button_3>
+				<button class="my_button" id="generateMaze">Generate</button>
+			</div>
+
+			<div id = button_4>
+				<button class="my_button" id="saveTable">Save Data</button>
+			</div>
+
+		</div>
+
+	</body>
+</html>
