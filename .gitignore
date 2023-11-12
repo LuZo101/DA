@@ -1,1 +1,19 @@
 /bu.txt
+# Flutter
+/build/
+/flutter/
+/packages/
+/.idea/
+/.vscode/
+*.iml
+
+# HTML
+node_modules/
+npm-debug.log
+yarn-error.log
+/public/
+
+# JavaScript
+/node_modules/
+npm-debug.log
+yarn-error.log

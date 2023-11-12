@@ -5,6 +5,8 @@ const startUpMaxGrid = 60;
 const borderSize = 34;
 const panelSize = 240;
 const panelSize2 = 240;
+
+
 let table;
 
 let cellSize;
