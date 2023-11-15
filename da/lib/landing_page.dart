@@ -15,16 +15,13 @@ class LandingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _buildButton(
-                context, 'Zu den Algos', "http://192.168.1.85:80", Colors.red),
-            _buildButton(
-                context, 'Homepage', "https://www.bulme.at/", Colors.blue),
+                context, 'Zu den Algos', "http://192.168.1.85:80", true),
+            _buildButton(context, 'Homepage', "https://www.bulme.at/", false),
             _buildButton(
                 context,
                 'Zur Diplomarbeit',
                 "https://docs.google.com/document/d/1lz6akasL-0GFXRB1J_aWF2DIi-dOwn3Wv29YsnuJc-Q/edit?usp=sharing",
-                Colors.orange),
-            _buildButton(context, 'Zum Server', "https://192.168.1.200:8006",
-                Colors.purple), // URL für Ihren Server einfügen
+                true),
           ],
         ),
       ),
@@ -32,18 +29,17 @@ class LandingPage extends StatelessWidget {
   }
 
   Widget _buildButton(
-      BuildContext context, String label, String url, Color color) {
+      BuildContext context, String label, String url, bool showDownloadButton) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(backgroundColor: color),
-      onPressed: () => _navigateTo(context, url),
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => WebViewScreen(
+            url: url,
+            showDownloadButton: showDownloadButton,
+          ),
+        ));
+      },
       child: Text(label),
-    );
-  }
-
-  void _navigateTo(BuildContext context, String url) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => WebViewScreen(url: url)),
     );
   }
 }

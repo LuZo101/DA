@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
+import 'permission_info_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class WebViewScreen extends StatelessWidget {
   final String url;
   final bool showDownloadButton;
-  final double scale = 0.9;
 
   const WebViewScreen({
     Key? key,
@@ -20,26 +18,33 @@ class WebViewScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Transform.scale(
-            scale: scale,
-            child: WebView(
-              initialUrl: url,
-              javascriptMode: JavascriptMode.unrestricted,
+          WebView(
+            initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+          ),
+          Positioned(
+            top: 40.0,
+            left: 10.0,
+            child: SafeArea(
+              child: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
             ),
           ),
-          // Weitere UI-Elemente hier
           if (showDownloadButton)
             Positioned(
               top: 40.0,
-              right: 60.0,
+              right: 10.0,
               child: SafeArea(
                 child: CircleAvatar(
                   backgroundColor: Colors.red,
                   child: IconButton(
                     icon: const Icon(Icons.download, color: Colors.white),
-                    onPressed: () async {
-                      await _downloadFile(context, url);
-                    },
+                    onPressed: () => _checkPermissions(context),
                   ),
                 ),
               ),
@@ -49,39 +54,13 @@ class WebViewScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _downloadFile(BuildContext context, String url) async {
-    final status = await Permission.storage.request();
-    if (status.isGranted) {
-      final externalDir = await getExternalStorageDirectory();
-      await FlutterDownloader.enqueue(
-        url: url,
-        savedDir: externalDir!.path,
-        showNotification: true,
-        openFileFromNotification: true,
-      );
+  void _checkPermissions(BuildContext context) async {
+    if (!await Permission.storage.isGranted) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const PermissionInfoScreen(),
+      ));
     } else {
-      // Prüfen Sie, ob das Widget noch gemountet ist, bevor Sie den BuildContext verwenden
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Berechtigung zum Speichern erforderlich')),
-      );
+      // Fügen Sie hier Ihren Download-Code ein
     }
-  }
-}
-
-class EvaluationScreen extends StatelessWidget {
-  const EvaluationScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Auswertung der Algos"),
-      ),
-      body: const Center(
-        child: Text("Inhalt der Auswertungsseite"),
-      ),
-    );
   }
 }

@@ -32,14 +32,11 @@ class PermissionInfoScreen extends StatelessWidget {
   }
 
   void _requestPermission(BuildContext context) async {
-    final localContext =
-        context; // Speichern Sie den Kontext in einer lokalen Variable
-
     final status = await Permission.storage.request();
     if (status.isGranted) {
-      Navigator.pop(localContext); // Verwenden Sie localContext
+      Navigator.pop(context); // Zurück zum WebViewScreen
     } else {
-      ScaffoldMessenger.of(localContext).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Berechtigung nicht erteilt')),
       );
     }
