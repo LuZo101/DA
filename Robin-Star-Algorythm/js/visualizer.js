@@ -1,30 +1,30 @@
 
-
-
 function formatGridTable() {
-	// nur ganze pixel sind gute pixel
-	let convert = (window.innerWidth - panelSize - panelSize2 - borderSize) / (window.innerHeight - borderSize);
+    let isPortrait = window.innerHeight > window.innerWidth;
 
-	if (convert > 1) {
-		grid_size_x = startUpMaxGrid;
-		grid_size_y = Math.floor(startUpMaxGrid / convert);
+    if (isPortrait) {
+        // Anpassungen für den Portrait-Modus
+        grid_size_x = Math.floor(window.innerWidth / cellSize);
+        grid_size_y = Math.floor(0.75 * window.innerHeight / cellSize); // 75% der Bildschirmhöhe
 
-		if (grid_size_y % 2 == 0)
-			grid_size_y += 1;
-
-		cellSize = Math.floor((window.innerWidth - panelSize - panelSize2 - borderSize) / startUpMaxGrid);
-	}
-
-	else {
-		grid_size_x = Math.floor(startUpMaxGrid * convert);
-		grid_size_y = startUpMaxGrid;
-
-		if (grid_size_x % 2 == 0)
-			grid_size_x += 1;
-
-		cellSize = Math.floor(window.innerHeight  / startUpMaxGrid);
-	}
+        if (grid_size_x % 2 === 0) grid_size_x += 1;
+        if (grid_size_y % 2 === 0) grid_size_y += 1;
+    } else {
+        let convert = (window.innerWidth - panelSize - panelSize2 - borderSize) / (window.innerHeight - borderSize);
+        if (convert > 1) {
+            grid_size_x = startUpMaxGrid;
+            grid_size_y = Math.floor(startUpMaxGrid / convert);
+            if (grid_size_y % 2 === 0) grid_size_y += 1;
+            cellSize = Math.floor((window.innerWidth - panelSize - panelSize2 - borderSize) / startUpMaxGrid);
+        } else {
+            grid_size_x = Math.floor(startUpMaxGrid * convert);
+            grid_size_y = startUpMaxGrid;
+            if (grid_size_x % 2 === 0) grid_size_x += 1;
+            cellSize = Math.floor(window.innerHeight / startUpMaxGrid);
+        }
+    }
 }
+
 
 function generateGrid() {
 

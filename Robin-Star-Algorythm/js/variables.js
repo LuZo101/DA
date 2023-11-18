@@ -4,12 +4,10 @@
 //Webversion
 const startUpMaxGrid = 60;
 const borderSize = 34;
-const panelSize = 240;
-const panelSize2 = 240;
+const panelSize = 300;
+const panelSize2 = 0;
 
-//Mobileversion
-const startUpMaxGridMobile = 60;
-const panelMenuHightMobile = 250;
+
 
 
 

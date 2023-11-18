@@ -45,5 +45,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Beschreibung, warum die App auf Ihre Fotos zugreifen muss.</string>
+
 </dict>
 </plist>
