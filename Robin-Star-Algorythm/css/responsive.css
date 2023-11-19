@@ -1,58 +1,87 @@
-
 @media screen and (orientation: portrait) {
-    /* Stil für den Visualizer */
-    .visualizer {
-        width: 100%;
-        height: 75vh; /* 75% der Bildschirmhöhe für das Grid */
+
+    body, .container, header, nav, .main-content, .menu, #menu {
+        background-color: #000!important; /* Set background color to black for all elements */
+        color: #0f0; /* Green text color for contrast */
+    }
+    /* Style for the visualizer */
+    #visualizer {
+        background-color: rgb(0, 0, 0);
         position: fixed;
-        transform: none;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 75vh; /* 75% of the screen height */
         overflow: hidden;
     }
 
-    /* Container für Menü und Buttons */
+    /* Adjusted style for the grid */
+    #grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%; /* Full height of the visualizer */
+        z-index: 2;
+        box-shadow: 0px 0px 30px rgba(2, 6, 14, 0.692);
+    }
+
+    /* Container for menu and buttons */
     #menu {
         position: fixed;
         bottom: 0;
-        right: 0;
-        width: 100%; /* Rechte Hälfte des Bildschirms */
-        height: 25vh; /* 25% der Bildschirmhöhe für die Buttons */
+        width: 100%; /* Full width of the screen */
+        height: 25vh; /* 25% of the screen height for the buttons */
         display: flex;
-        flex-wrap: wrap; /* Ermöglicht das Umfließen der Buttons */
-        justify-content: space-evenly;  /* Buttons nach unten schieben */
-        align-items: center; /* Zentriert die Buttons horizontal */
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
         padding: 10px;
         box-sizing: border-box;
-        background-color: #f0f0f0; /* Hintergrundfarbe für das Menü */
-        overflow-y: auto; /* Bei Bedarf Scrollen ermöglichen */
+        background-color: #f0f0f0; /* Background color for the menu */
+        overflow-y: auto;
     }
 
-    /* Stile für Buttons */
-    .my_button {
-        width: auto;
-        margin: 5px;
-        /* Restliche Button-Stile */
-    }
-
-    /* Spezieller Stil für den Clear-Button */
-    #clear {
-        background-color: red;
-        /* Restliche Stile für den Clear-Button */
-    }
-    
-    /* Anpassungen für die Select-Elemente, damit sie nicht die volle Breite einnehmen */
-    .select select {
-        width: auto;
-        /* Restliche Stile für Select-Elemente */
-    }
-    
-    /* Anpassungen für Input-Felder */
+    /* Styles for input fields */
     input[type="text"] {
-        width: auto;
-        /* Restliche Stile für Input-Felder */
+        background-color: #000; /* Black background */
+        color: #0f0; /* Green text color */
+        border: 1px solid #0f0; /* Green border */
+        padding: 5px;
+        font-size: 16px;
+        width: 100%;
+        margin: 5px 0;
+        max-width: 100px; /* Adjust width as needed */
+    }
+
+    /* Styles for buttons */
+    .my_button {
+        background-color: #0f0; /* Green background */
+        color: #000; /* Black text color */
+        border: none;
+        padding: 10px 20px;
+        margin: 10px auto;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .my_button:hover {
+        background-color: #00f; /* Blue background on hover */
+        color: #0f0; /* Green text color on hover */
+    }
+
+    /* Specific styles for the Clear and Save buttons */
+    #clear, #saveTable {
+        background-color: #00f; /* Blue background */
+    }
+
+    #clear:hover, #saveTable:hover {
+        background-color: #66f; /* Lighter blue on hover */
     }
 }
+
+
 
 
 /* Grundlegende Stile, die auf alle Bildschirmgrößen angewendet werden */
@@ -162,4 +191,3 @@ input[type="text"] {
 #time_container label {
     margin: 0 5px;
 }
-

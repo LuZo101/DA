@@ -2,7 +2,7 @@
 // Globale Variablen Liste
 
 //Webversion
-const startUpMaxGrid = 60;
+const startUpMaxGrid = 40;
 const startUpMaxGridMobile = 40;
 const panelSize = 300;
 

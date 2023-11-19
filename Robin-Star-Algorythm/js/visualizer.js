@@ -1,41 +1,35 @@
 function formatGridTable() {
     let isPortrait = window.innerHeight > window.innerWidth;
     
-    // Set the number of cells across based on the orientation
+    // Define these values appropriately
+    const startUpMaxGridMobile = 30; // Example value for mobile
+    const startUpMaxGrid = 60; // Example value for desktop
+    const panelSize = 300; // Example value for the width of the side panel in landscape
+
     let cellsAcross = isPortrait ? startUpMaxGridMobile : startUpMaxGrid;
-    
-    // In landscape, account for panelSize in the available width
     let availableWidth = isPortrait ? window.innerWidth : window.innerWidth - panelSize;
-
-    // Calculate cell size based on the available width and the desired number of cells across
     cellSize = Math.floor(availableWidth / cellsAcross);
-    
-    // Calculate the grid size based on cell size
-    grid_size_x = cellsAcross;
-    grid_size_y = Math.floor((isPortrait ? 0.75 * window.innerHeight : window.innerHeight) / cellSize);
 
-    // Ensure an odd number of cells for symmetry, if required
+    // Use 75% of the height in portrait mode and 100% in landscape mode
+    let availableHeight = isPortrait ? window.innerHeight * 0.75 : window.innerHeight;
+    grid_size_x = cellsAcross;
+    grid_size_y = Math.floor(availableHeight / cellSize);
+
     if (grid_size_x % 2 === 0) grid_size_x += 1;
     if (grid_size_y % 2 === 0) grid_size_y += 1;
 
-    // Apply the calculated sizes to the visualizer's grid container
     let visualizer = document.querySelector("#visualizer");
     visualizer.style.width = `${cellSize * grid_size_x}px`;
     visualizer.style.height = `${cellSize * grid_size_y}px`;
 
-    // Adjust position based on orientation
-    if (isPortrait) {
-        // In portrait, the visualizer is in the top left corner
-        visualizer.style.position = 'absolute';
-        visualizer.style.top = '0';
-        visualizer.style.left = '0';
-    } else {
-        // In landscape, the visualizer is offset by the width of the menu
-        visualizer.style.position = 'absolute';
-        visualizer.style.top = '0';
-        visualizer.style.left = `${panelSize}px`;
-    }
+    visualizer.style.position = 'absolute';
+    visualizer.style.top = '0';
+    visualizer.style.left = isPortrait ? '0' : `${panelSize}px`;
 }
+
+window.addEventListener('load', formatGridTable);
+window.addEventListener('resize', formatGridTable);
+
 
 // Bind the function to the load and resize events
 window.addEventListener('load', formatGridTable);
