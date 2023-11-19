@@ -1,29 +1,45 @@
-
 function formatGridTable() {
     let isPortrait = window.innerHeight > window.innerWidth;
+    
+    // Set the number of cells across based on the orientation
+    let cellsAcross = isPortrait ? startUpMaxGridMobile : startUpMaxGrid;
+    
+    // In landscape, account for panelSize in the available width
+    let availableWidth = isPortrait ? window.innerWidth : window.innerWidth - panelSize;
 
+    // Calculate cell size based on the available width and the desired number of cells across
+    cellSize = Math.floor(availableWidth / cellsAcross);
+    
+    // Calculate the grid size based on cell size
+    grid_size_x = cellsAcross;
+    grid_size_y = Math.floor((isPortrait ? 0.75 * window.innerHeight : window.innerHeight) / cellSize);
+
+    // Ensure an odd number of cells for symmetry, if required
+    if (grid_size_x % 2 === 0) grid_size_x += 1;
+    if (grid_size_y % 2 === 0) grid_size_y += 1;
+
+    // Apply the calculated sizes to the visualizer's grid container
+    let visualizer = document.querySelector("#visualizer");
+    visualizer.style.width = `${cellSize * grid_size_x}px`;
+    visualizer.style.height = `${cellSize * grid_size_y}px`;
+
+    // Adjust position based on orientation
     if (isPortrait) {
-        // Anpassungen für den Portrait-Modus
-        grid_size_x = Math.floor(window.innerWidth / cellSize);
-        grid_size_y = Math.floor(0.75 * window.innerHeight / cellSize); // 75% der Bildschirmhöhe
-
-        if (grid_size_x % 2 === 0) grid_size_x += 1;
-        if (grid_size_y % 2 === 0) grid_size_y += 1;
+        // In portrait, the visualizer is in the top left corner
+        visualizer.style.position = 'absolute';
+        visualizer.style.top = '0';
+        visualizer.style.left = '0';
     } else {
-        let convert = (window.innerWidth - panelSize - panelSize2 - borderSize) / (window.innerHeight - borderSize);
-        if (convert > 1) {
-            grid_size_x = startUpMaxGrid;
-            grid_size_y = Math.floor(startUpMaxGrid / convert);
-            if (grid_size_y % 2 === 0) grid_size_y += 1;
-            cellSize = Math.floor((window.innerWidth - panelSize - panelSize2 - borderSize) / startUpMaxGrid);
-        } else {
-            grid_size_x = Math.floor(startUpMaxGrid * convert);
-            grid_size_y = startUpMaxGrid;
-            if (grid_size_x % 2 === 0) grid_size_x += 1;
-            cellSize = Math.floor(window.innerHeight / startUpMaxGrid);
-        }
+        // In landscape, the visualizer is offset by the width of the menu
+        visualizer.style.position = 'absolute';
+        visualizer.style.top = '0';
+        visualizer.style.left = `${panelSize}px`;
     }
 }
+
+// Bind the function to the load and resize events
+window.addEventListener('load', formatGridTable);
+window.addEventListener('resize', formatGridTable);
 
 
 function generateGrid() {

@@ -3,9 +3,8 @@
 
 //Webversion
 const startUpMaxGrid = 60;
-const borderSize = 34;
+const startUpMaxGridMobile = 40;
 const panelSize = 300;
-const panelSize2 = 0;
 
 
 

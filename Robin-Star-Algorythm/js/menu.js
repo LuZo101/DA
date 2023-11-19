@@ -16,33 +16,49 @@ window.onload = function () {
   menu_event_listeners();
 };
 
-
-// panelSize 1 und 2 -> const für die panelgröße links und rechts
-// borderSize -> Abstand zwischen Panel und Gridfeld
-
 function initMenu() {
   const isPortrait = window.innerHeight > window.innerWidth;
   var menu = document.querySelector("#menu");
   var visualizer = document.querySelector("#visualizer");
 
-  menu.style.width = panelSize.toString(10) + "px";
-
   if (isPortrait) {
-    visualizer.style.height = "75vh"; // 75% der Bildschirmhöhe im Portrait-Modus
-  } else {
-    visualizer.style.height = (window.innerHeight + borderSize * 2).toString(10) + "px";
-  }
+    // In portrait mode, the menu should be full-width at the bottom of the viewport.
+    menu.style.width = '100%';
+    menu.style.height = '25vh'; // or whatever height you want it to be
+    menu.style.position = 'fixed';
+    menu.style.bottom = '0';
+    menu.style.left = '0';
 
-  visualizer.style.width = (window.innerWidth - panelSize - borderSize * 2).toString(10) + "px";
-  visualizer.style.left = panelSize.toString(10) + "px";
+    // The visualizer should take the remaining space.
+    visualizer.style.position = 'absolute';
+    visualizer.style.top = '0';
+    visualizer.style.bottom = '25vh'; // same height as the menu
+    visualizer.style.width = '100%';
+    visualizer.style.height = 'auto';
+  } else {
+    // In landscape mode, you can define a fixed width for the menu if needed.
+    // If the menu should not be visible, you can set it to display: none;
+    menu.style.width = '300px'; // or whatever width the menu should be
+    menu.style.height = '100%';
+    menu.style.position = 'absolute';
+    menu.style.left = '0';
+
+    // The visualizer should take the remaining space.
+    visualizer.style.position = 'absolute';
+    visualizer.style.top = '0';
+    visualizer.style.bottom = '0';
+    visualizer.style.left = '300px'; // same width as the menu
+    visualizer.style.width = 'calc(100% - 300px)'; // subtract the width of the menu
+    visualizer.style.height = 'auto';
+  }
 }
+
 
 function initCss() {
   var grid = document.querySelector("#grid");
   grid.style.width = (cellSize * grid_size_x).toString(10) + "px";
   grid.style.height = (cellSize * grid_size_y).toString(10) + "px";
 }
-
 function idset(id, string) {
   document.getElementById(id).innerHTML = string;
 }
@@ -100,6 +116,7 @@ var stoppuhr = (function () {
   };
 })();
 setInterval(stoppuhr.timer, 10);
+
 function clear() {
   document.getElementById("visited_cells_counter").value = null;
   document.getElementById("finalpath_cells_counter").value = null;
@@ -119,6 +136,7 @@ function clear() {
       visualEvents();
   }
 }
+
 function menu_event_listeners() {
   // Generate Maze
   document.querySelector("#generateMaze").addEventListener("click", (event) => {
@@ -133,7 +151,7 @@ function menu_event_listeners() {
     }
 
     generating = false;
-    stoppuhr.start();
+    stoppuhr.restart();
     clear_grid();
     mazeRunner();
   });
