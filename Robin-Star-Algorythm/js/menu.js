@@ -100,6 +100,8 @@ var stoppuhr = (function () {
   };
 })();
 setInterval(stoppuhr.timer, 10);
+
+
 function clear() {
   document.getElementById("visited_cells_counter").value = null;
   document.getElementById("finalpath_cells_counter").value = null;
@@ -119,6 +121,7 @@ function clear() {
       visualEvents();
   }
 }
+
 function menu_event_listeners() {
   // Generate Maze
   document.querySelector("#generateMaze").addEventListener("click", (event) => {
@@ -133,7 +136,7 @@ function menu_event_listeners() {
     }
 
     generating = false;
-    stoppuhr.start();
+    stoppuhr.restart();
     clear_grid();
     mazeRunner();
   });
