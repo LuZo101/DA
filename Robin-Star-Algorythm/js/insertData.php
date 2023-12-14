@@ -1,6 +1,5 @@
 <?php
 
-// hier deine db Daten eintragen
 $servername = "192.168.1.144";
 $username = "root";
 $password = "";
