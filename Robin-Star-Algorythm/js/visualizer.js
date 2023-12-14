@@ -19,12 +19,12 @@ function formatGridTable() {
     if (grid_size_y % 2 === 0) grid_size_y += 1;
 
     let visualizer = document.querySelector("#visualizer");
-    visualizer.style.width = `${cellSize * grid_size_x}px`;
+    /* visualizer.style.width = `${cellSize * grid_size_x}px`;
     visualizer.style.height = `${cellSize * grid_size_y}px`;
 
     visualizer.style.position = 'absolute';
     visualizer.style.top = '0';
-    visualizer.style.left = isPortrait ? '0' : `${panelSize}px`;
+    visualizer.style.left = isPortrait ? '0' : `${panelSize}px`; */
 }
 
 window.addEventListener('load', formatGridTable);

@@ -1,10 +1,10 @@
 <?php
 
 // hier deine db Daten eintragen
-$servername = "localhost";
-$username = "username";
-$password = "password";
-$dbname = "database";
+$servername = "192.168.1.144";
+$username = "root";
+$password = "RbPiAkift23!";
+$dbname = "diplomarbeit";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
@@ -20,7 +20,7 @@ $visitedCellCounter = $data['visitedCellCounter'];
 $timeTaken = $data['timeTaken'];
 
 // Tabellen Name eintragen und Daten einfügen...
-$sql = "INSERT INTO table_name (final_path_counter, visited_cell_counter, time_taken) VALUES ('$finalPathCounter', '$visitedCellCounter', '$timeTaken')";
+$sql = "INSERT INTO data (path_length, cells_visited, elapsed_time) VALUES ('$finalPathCounter', '$visitedCellCounter', '$timeTaken')";
 
 if (mysqli_query($conn, $sql)) {
   echo "Data inserted successfully";
