@@ -166,7 +166,7 @@ function menu_event_listeners() {
 
     const finalPathCounter = finalpath_cell_counter;
     const visitedCellCounter = visited_cell_counter;
-    const timeTaken = time; // Zeit im richtigen Format
+    const timeTaken = time;
 
     const data = {
       finalPathCounter,
