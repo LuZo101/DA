@@ -130,10 +130,10 @@ function clear() {
   delete_grid();
 
   if (window.innerWidth > panelSize + 50) {
-      initMenu();
-      generateGrid();
-      initCss();
-      visualEvents();
+    initMenu();
+    generateGrid();
+    initCss();
+    visualEvents();
   }
 }
 
@@ -160,13 +160,13 @@ function menu_event_listeners() {
 
     const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
     const visited_cell_counter = document.getElementById("visited_cells_counter").value;
-    const time = document.getElementById("minuten").innerHTML + ":" + document.getElementById("sekunden").innerHTML + ":" + document.getElementById("msekunden").innerHTML;
+    const time = `${stoppuhr.mins}:${stoppuhr.secs}:${stoppuhr.msecs}`;
 
     console.log("Länge gesammt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + " benötigte Zeit = " + time);
 
     const finalPathCounter = finalpath_cell_counter;
     const visitedCellCounter = visited_cell_counter;
-    const timeTaken = stoppuhr.mins + ":" + stoppuhr.secs + ":" + stoppuhr.msecs;
+    const timeTaken = time; // Zeit im richtigen Format
 
     const data = {
       finalPathCounter,
