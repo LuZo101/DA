@@ -74,10 +74,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_downloader
-      sha256: "4a03c705dc60b4f537796da937c80fd5bff63b175f4dd99e1539ab3ad5dbeda0"
+      sha256: "36c16cc6657274f3cf7ccb681aeca89df62531ff5956f85e175f6be4b8d6b140"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.4"
+    version: "1.11.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -207,10 +207,10 @@ packages:
     dependency: transitive
     description:
       name: plugin_platform_interface
-      sha256: da3fdfeccc4d4ff2da8f8c556704c08f912542c5fb3cf2233ed75372384a034d
+      sha256: f4f88d4a900933e7267e2b353594774fc0d07fb072b47eedcd5b54e1ea3269f8
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.6"
+    version: "2.1.7"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -316,10 +316,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "7c99c0e1e2fa190b48d25c81ca5e42036d5cac81430ef249027d97b0935c553f"
+      sha256: b0f37db61ba2f2e9b7a78a1caece0052564d1bc70668156cf3a29d676fe4e574
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   xdg_directories:
     dependency: transitive
     description:

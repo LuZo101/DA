@@ -15,7 +15,7 @@ class LandingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _buildButton(
-                context, 'Zu den Algos', "http://192.168.1.85:80", false, true),
+                context, 'Zu den Algos', "http://192.168.1.144/DA/Robin-Star-Algorythm/", false, true),
             _buildButton(
                 context, 'Homepage', "https://www.bulme.at/", false, false),
             _buildButton(
