@@ -37,6 +37,7 @@ try {
     }
 
     echo "Data inserted successfully";
+    echo json_encode(["message" => "Data inserted successfully"]);
 } catch (Exception $e) {
     // Fehlerprotokollierung
     error_log($e->getMessage());

@@ -160,13 +160,13 @@ function menu_event_listeners() {
 document.querySelector("#saveTable").addEventListener("click", (event) => {
   const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
   const visited_cell_counter = document.getElementById("visited_cells_counter").value;
-  const time = `${stoppuhr.mins}:${stoppuhr.secs}:${stoppuhr.msecs}`;
-  
+/*   const time = `${stoppuhr.mins}:${stoppuhr.secs}:${stoppuhr.msecs}`;
+ */  
   // Abrufen der ausgewählten Algorithmus-ID
   const selectRunner = document.getElementById("selectRunner");
   const algorithmId = selectRunner.value;
 
-  console.log("Länge gesammt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + " benötigte Zeit = " + time);
+  console.log("gewahlter algo: "+algorithmId +"Länge gesammt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + " benötigte Zeit = " + time);
 
   const finalPathCounter = finalpath_cell_counter;
   const visitedCellCounter = visited_cell_counter;
