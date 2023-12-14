@@ -1,6 +1,10 @@
 <?php
 
-$servername = "192.168.1.144";
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
+$servername = "192.168.1.144:3306,";
 $username = "root";
 $password = "RbPiAkift23!";
 $dbname = "diplomarbeit";
