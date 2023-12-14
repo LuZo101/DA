@@ -166,7 +166,7 @@ function menu_event_listeners() {
 
     const finalPathCounter = finalpath_cell_counter;
     const visitedCellCounter = visited_cell_counter;
-    const timeTaken = time;
+    const timeTaken = `${String(stoppuhr.mins).padStart(2, '0')}:${String(stoppuhr.secs).padStart(2, '0')}:${String(stoppuhr.msecs).padStart(2, '0')}`;
 
     const data = {
       finalPathCounter,
