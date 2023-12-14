@@ -3,7 +3,7 @@
 // hier deine db Daten eintragen
 $servername = "192.168.1.144";
 $username = "root";
-$password = "RbPiAkift23!";
+$password = "";
 $dbname = "diplomarbeit";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
