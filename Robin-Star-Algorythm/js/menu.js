@@ -175,11 +175,8 @@ function menu_event_listeners() {
       timeTaken,
     };
 
-    fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
+    fetch("insertData.php", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
