@@ -156,33 +156,38 @@ function menu_event_listeners() {
     clear_grid();
     mazeRunner();
   });
+//Save Button
+document.querySelector("#saveTable").addEventListener("click", (event) => {
+  const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
+  const visited_cell_counter = document.getElementById("visited_cells_counter").value;
+  const time = `${stoppuhr.mins}:${stoppuhr.secs}:${stoppuhr.msecs}`;
+  
+  // Abrufen der ausgewählten Algorithmus-ID
+  const selectRunner = document.getElementById("selectRunner");
+  const algorithmId = selectRunner.value;
 
-  document.querySelector("#saveTable").addEventListener("click", (event) => {
+  console.log("Länge gesammt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + " benötigte Zeit = " + time);
 
-    const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
-    const visited_cell_counter = document.getElementById("visited_cells_counter").value;
-    const time = `${stoppuhr.mins}:${stoppuhr.secs}:${stoppuhr.msecs}`;
+  const finalPathCounter = finalpath_cell_counter;
+  const visitedCellCounter = visited_cell_counter;
+  const timeTaken = `${String(stoppuhr.mins).padStart(2, '0')}:${String(stoppuhr.secs).padStart(2, '0')}:${String(stoppuhr.msecs).padStart(2, '0')}`;
 
-    console.log("Länge gesammt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + " benötigte Zeit = " + time);
+  const data = {
+    finalPathCounter,
+    visitedCellCounter,
+    timeTaken,
+    algorithmId, // Die ausgewählte Algorithmus-ID hinzufügen
+  };
 
-    const finalPathCounter = finalpath_cell_counter;
-    const visitedCellCounter = visited_cell_counter;
-    const timeTaken = `${String(stoppuhr.mins).padStart(2, '0')}:${String(stoppuhr.secs).padStart(2, '0')}:${String(stoppuhr.msecs).padStart(2, '0')}`;
+  fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
+});
 
-    const data = {
-      finalPathCounter,
-      visitedCellCounter,
-      timeTaken,
-    };
-
-    fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
-  });
 
   // Delete Button
   document.querySelector("#clear").addEventListener("click", (event) => {
