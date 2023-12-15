@@ -187,10 +187,10 @@ function menu_event_listeners() {
     const formattedTime = formatTime(time.mins, time.secs, time.msecs);
   
     const data = {
+      algorithmId,
       finalPathCounter: finalpath_cell_counter,
       visitedCellCounter: visited_cell_counter,
-      timeTaken: formattedTime,
-      algorithmId
+      timeTaken: formattedTime
     };
   
     fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {

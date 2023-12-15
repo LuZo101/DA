@@ -16,8 +16,8 @@ try {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // POST-Anfrage: Daten in die Datenbank einfügen
         $data = json_decode(file_get_contents('php://input'), true);
+        error_log("Received POST data: " . print_r($data, true)); // Log received data
 
         if (!isset($data['finalPathCounter'], $data['visitedCellCounter'], $data['timeTaken'], $data['algorithmId'])) {
             throw new Exception("Invalid input data");
@@ -37,7 +37,6 @@ try {
 
         echo json_encode(["message" => "Data inserted successfully"]);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // GET-Anfrage: Daten aus der Datenbank abrufen
         $result = $conn->query("SELECT * FROM data");
         $data = [];
 
@@ -48,8 +47,8 @@ try {
         echo json_encode($data);
     }
 } catch (Exception $e) {
-    error_log($e->getMessage());
-    echo json_encode(["error" => "An error occurred. Please try again later."]);
+    error_log("Exception: " . $e->getMessage()); // More specific error logging
+    echo json_encode(["error" => "An error occurred: " . $e->getMessage()]);
 } finally {
     if (isset($conn)) {
         $conn->close();
