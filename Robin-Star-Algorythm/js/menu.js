@@ -140,10 +140,11 @@ function clear() {
 function formatTime(mins, secs, msecs) {
   const formattedMins = String(mins).padStart(2, '0');
   const formattedSecs = String(secs).padStart(2, '0');
-  const formattedMsecs = String(msecs).padStart(2, '0');
+  const formattedMsecs = String(msecs).padStart(3, '0');
 
   return `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
 }
+
 
 
 function menu_event_listeners() {
