@@ -351,7 +351,7 @@ function aldous_broder_algorithm() {
 				grid[chosen_cell[0]][chosen_cell[1]] = 1;
 				place_to_cell(chosen_cell[0], chosen_cell[1]).classList.add("visited_cell");
 				cells_nb--;
-				console.log("nb -> " + cells_nb);
+				//console.log("nb -> " + cells_nb);
 				current_cell = chosen_cell;
 				return;
 			}
@@ -426,7 +426,7 @@ function recursive_division() {
 	timeouts.push(setTimeout(function() { 
 		generating = false; 
 		timeouts = []; 
-		console.log("timeouts ->" + timeouts);
+		//console.log("timeouts ->" + timeouts);
 	}, time));
 }
 
