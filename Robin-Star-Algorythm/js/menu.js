@@ -164,14 +164,21 @@ function menu_event_listeners() {
     stoppuhr.restart();
     clear_grid();
     mazeRunner();
-  });
-  // Save Button Event Listener
-  document.querySelector("#saveTable").addEventListener("click", (event) => {
+  });document.querySelector("#saveTable").addEventListener("click", (event) => {
     const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
     const visited_cell_counter = document.getElementById("visited_cells_counter").value;
     const selectRunner = document.getElementById("selectRunner");
     const algorithmId = selectRunner.value;
-    const formattedTime = formatTime(stoppuhr.mins, stoppuhr.secs, stoppuhr.msecs);
+  
+    const mins = stoppuhr.mins;
+    const secs = stoppuhr.secs;
+    const msecs = stoppuhr.msecs;
+  
+    const formattedMins = String(mins).padStart(2, '0');
+    const formattedSecs = String(secs).padStart(2, '0');
+    const formattedMsecs = String(msecs).padStart(2, '0');
+  
+    const formattedTime = `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
   
     console.log("gewählter Algorithmus: " + algorithmId + ", Länge gesamt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + ", benötigte Zeit = " + formattedTime);
   
@@ -181,17 +188,16 @@ function menu_event_listeners() {
       timeTaken: formattedTime,
       algorithmId
     };
-
   
-
-  fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
-    method: "POST",
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error));
-});
+    fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+  });
+  
 
 
   // Delete Button
