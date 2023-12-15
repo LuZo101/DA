@@ -99,7 +99,6 @@ var stoppuhr = (function () {
           secs = 0;
         }
         stoppuhr.html();
-        timeTaken = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:${String(msecs).padStart(2, '0')}`;
       }
     },
     set: function (minuten, sekunden, msekunden) {
