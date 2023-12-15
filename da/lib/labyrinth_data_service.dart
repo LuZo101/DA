@@ -4,21 +4,18 @@ import 'dart:convert';
 class LabyrinthData {
   final int pathLength;
   final int cellsVisited;
-  final String elapsedTime;
-  final int algorithmId;
+  final String elapsedTime; // Änderung hier
 
   LabyrinthData(
       {required this.pathLength,
       required this.cellsVisited,
-      required this.elapsedTime,
-      required this.algorithmId});
+      required this.elapsedTime});
 
   factory LabyrinthData.fromJson(Map<String, dynamic> json) {
     return LabyrinthData(
-      pathLength: json['path_length'],
-      cellsVisited: json['cells_visited'],
-      elapsedTime: json['elapsed_time'],
-      algorithmId: json['algorithm_id'],
+      pathLength: int.parse(json['path_length'].toString()),
+      cellsVisited: int.parse(json['cells_visited'].toString()),
+      elapsedTime: json['elapsed_time'], // Keine Konvertierung erforderlich
     );
   }
 }
