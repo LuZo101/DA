@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 class LabyrinthData {
   final int algorithmId;
@@ -39,7 +38,7 @@ Future<List<LabyrinthData>> fetchLabyrinthData() async {
   }
 }
 
-enum DisplayMode { rawData, barChart, lineChart }
+enum DisplayMode { rawData, barChart }
 
 class EvaluationScreen extends StatefulWidget {
   const EvaluationScreen({Key? key}) : super(key: key);
@@ -72,11 +71,6 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
                 onPressed: () =>
                     setState(() => displayMode = DisplayMode.barChart),
               ),
-              IconButton(
-                icon: const Icon(Icons.show_chart),
-                onPressed: () =>
-                    setState(() => displayMode = DisplayMode.lineChart),
-              ),
             ],
           ),
           Expanded(
@@ -89,8 +83,6 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
                       return RawDataView(data: snapshot.data!);
                     case DisplayMode.barChart:
                       return MyBarChart(data: snapshot.data!);
-                    case DisplayMode.lineChart:
-                      return MyLineChart(data: snapshot.data!);
                     default:
                       return const SizedBox.shrink();
                   }
@@ -133,22 +125,61 @@ class MyBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<BarChartGroupData> barGroups = data
-        .map((e) => BarChartGroupData(
-              x: e.algorithmId,
-              barRods: [
-                BarChartRodData(
-                  toY: e.pathLength.toDouble(),
-                  color: getColorForAlgorithmId(e.algorithmId),
-                  width: 20,
-                ),
-              ],
-            ))
-        .toList();
+    List<BarChartGroupData> barGroups = data.map((e) {
+      return BarChartGroupData(
+        x: e.algorithmId,
+        barRods: [
+          BarChartRodData(
+            toY: e.pathLength
+                .toDouble(), // Verwenden Sie die Pfadlänge für die Balkenhöhe
+            color: getColorForAlgorithmId(e.algorithmId),
+            width: 20,
+            rodStackItems: [
+              BarChartRodStackItem(0, e.pathLength.toDouble(),
+                  getColorForAlgorithmId(e.algorithmId)),
+            ],
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: e.pathLength.toDouble(),
+              color: getColorForAlgorithmId(e.algorithmId).withOpacity(0.2),
+            ),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      );
+    }).toList();
 
     return BarChart(
       BarChartData(
         barGroups: barGroups,
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (double value, TitleMeta meta) {
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 16.0,
+                  child: Text(getAlgorithmName(value.toInt())),
+                );
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: true),
+          ),
+        ),
+        barTouchData: BarTouchData(
+          touchTooltipData: BarTouchTooltipData(
+            tooltipBgColor: Colors.grey,
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              return BarTooltipItem(
+                data[group.x.toInt()].elapsedTime + '\n',
+                TextStyle(color: Colors.white),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -169,31 +200,25 @@ class MyBarChart extends StatelessWidget {
   }
 }
 
-class MyLineChart extends StatelessWidget {
-  final List<LabyrinthData> data;
-
-  MyLineChart({required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    List<charts.Series<LabyrinthData, DateTime>> seriesList =
-        _createSeriesList();
-
-    return charts.TimeSeriesChart(
-      seriesList,
-      animate: true,
-    );
+String getAlgorithmName(int algorithmId) {
+  switch (algorithmId) {
+    case 1:
+      return "Best-First";
+    case 2:
+      return "Dijkstra";
+    case 3:
+      return "Tremaux";
+    case 4:
+      return "A-Star";
+    default:
+      return "Unbekannt";
   }
+}
 
-  List<charts.Series<LabyrinthData, DateTime>> _createSeriesList() {
-    return [
-      charts.Series<LabyrinthData, DateTime>(
-        id: 'Labyrinth',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LabyrinthData data, _) => DateTime.parse(data.elapsedTime),
-        measureFn: (LabyrinthData data, _) => data.pathLength,
-        data: data,
-      )
-    ];
-  }
+int convertTimeToMilliseconds(String timeString) {
+  List<String> parts = timeString.split(':');
+  int mins = int.parse(parts[0]);
+  int secs = int.parse(parts[1]);
+  int msecs = int.parse(parts[2]);
+  return (mins * 60 + secs) * 1000 + msecs;
 }

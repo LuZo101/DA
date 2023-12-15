@@ -35,3 +35,26 @@ class LabyrinthDataService {
 
   // Hier können Sie weitere Methoden hinzufügen, falls benötigt
 }
+
+int convertTimeToMilliseconds(String timeString) {
+  List<String> parts = timeString.split(':');
+  int mins = int.parse(parts[0]);
+  int secs = int.parse(parts[1]);
+  int msecs = int.parse(parts[2]);
+  return (mins * 60 + secs) * 1000 + msecs;
+}
+
+String getAlgorithmName(int algorithmId) {
+  switch (algorithmId) {
+    case 1:
+      return "Best-First";
+    case 2:
+      return "Dijkstra";
+    case 3:
+      return "Tremaux";
+    case 4:
+      return "A-Star";
+    default:
+      return "Unbekannt";
+  }
+}
