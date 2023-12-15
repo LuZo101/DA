@@ -62,19 +62,18 @@ function initCss() {
 function idset(id, string) {
   document.getElementById(id).innerHTML = string;
 }
-
 var stoppuhr = (function () {
-  var stop = 1;
+  var isRunning = false;
   var mins = 0;
   var secs = 0;
   var msecs = 0;
 
   return {
     start: function () {
-      stop = 0;
+      isRunning = true;
     },
     stop: function () {
-      stop = 1;
+      isRunning = false;
     },
     clear: function () {
       stoppuhr.stop();
@@ -88,7 +87,7 @@ var stoppuhr = (function () {
       stoppuhr.start();
     },
     timer: function () {
-      if (stop === 0) {
+      if (isRunning) {
         msecs++;
         if (msecs === 100) {
           secs++;
@@ -115,6 +114,7 @@ var stoppuhr = (function () {
     },
   };
 })();
+
 setInterval(stoppuhr.timer, 10);
 
 function clear() {
