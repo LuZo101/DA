@@ -67,13 +67,33 @@ var stoppuhr = (function () {
   var mins = 0;
   var secs = 0;
   var msecs = 0;
+  var interval;
+
+  var updateTimer = function() {
+    if (isRunning) {
+      msecs++;
+      if (msecs >= 100) {
+        secs++;
+        msecs = 0;
+      }
+      if (secs >= 60) {
+        mins++;
+        secs = 0;
+      }
+      stoppuhr.html();
+    }
+  };
 
   return {
     start: function () {
-      isRunning = true;
+      if (!isRunning) {
+        isRunning = true;
+        interval = setInterval(updateTimer, 10);
+      }
     },
     stop: function () {
       isRunning = false;
+      clearInterval(interval);
     },
     clear: function () {
       stoppuhr.stop();
@@ -86,20 +106,7 @@ var stoppuhr = (function () {
       stoppuhr.clear();
       stoppuhr.start();
     },
-    timer: function () {
-      if (isRunning) {
-        msecs++;
-        if (msecs === 100) {
-          secs++;
-          msecs = 0;
-        }
-        if (secs === 60) {
-          mins++;
-          secs = 0;
-        }
-        stoppuhr.html();
-      }
-    },
+    timer: updateTimer,
     set: function (minuten, sekunden, msekunden) {
       stoppuhr.stop();
       mins = minuten;
@@ -180,8 +187,8 @@ function menu_event_listeners() {
     const formattedSecs = String(secs).padStart(2, '0');
     const formattedMsecs = String(msecs).padStart(2, '0');
   
-    const formattedTime = `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
-  
+    const formattedTime = formatTime(stoppuhr.mins, stoppuhr.secs, stoppuhr.msecs);
+      
     console.log("gewählter Algorithmus: " + algorithmId + ", Länge gesamt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + ", benötigte Zeit = " + formattedTime);
   
     const data = {
