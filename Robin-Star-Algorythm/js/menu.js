@@ -140,7 +140,7 @@ function clear() {
 function formatTime(mins, secs, msecs) {
   const formattedMins = String(mins).padStart(2, '0');
   const formattedSecs = String(secs).padStart(2, '0');
-  const formattedMsecs = String(msecs).padStart(3, '0');
+  const formattedMsecs = String(msecs).padStart(2, '0');
 
   return `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
 }
@@ -164,6 +164,8 @@ function menu_event_listeners() {
     stoppuhr.restart();
     clear_grid();
     mazeRunner();
+  //save btn
+
   });document.querySelector("#saveTable").addEventListener("click", (event) => {
     const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
     const visited_cell_counter = document.getElementById("visited_cells_counter").value;
