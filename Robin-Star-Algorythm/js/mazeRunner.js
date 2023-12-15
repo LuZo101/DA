@@ -199,7 +199,7 @@ function bestFirst() {
 		path_list.pop();
 		path_list.reverse();
 	}
-	console.log(node_list);
+	//console.log(node_list);
 	maze_solvers_interval();
 }
 
@@ -366,10 +366,10 @@ function maze_solvers_interval() {
     };
 
     const handleNodeList = () => {
-		console.log(node_list_index);
+		//console.log(node_list_index);
         place_to_cell(node_list[node_list_index][0], node_list[node_list_index][1]).classList.add("cell_algo");       
         node_list_index++;
-		console.log(node_list_index);
+		//console.log(node_list_index);
         visited_cell_counter = node_list_index;
         document.getElementById("visited_cells_counter").value = visited_cell_counter;
 
