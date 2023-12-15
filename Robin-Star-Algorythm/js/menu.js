@@ -62,6 +62,7 @@ function initCss() {
 function idset(id, string) {
   document.getElementById(id).innerHTML = string;
 }
+
 var stoppuhr = (function () {
   var isRunning = false;
   var mins = 0;
@@ -119,6 +120,9 @@ var stoppuhr = (function () {
       idset("sekunden", secs);
       idset("msekunden", msecs);
     },
+    getTime: function() {
+      return { mins, secs, msecs };
+    }
   };
 })();
 
@@ -145,11 +149,7 @@ function clear() {
 }
 
 function formatTime(mins, secs, msecs) {
-  const formattedMins = String(mins).padStart(2, '0');
-  const formattedSecs = String(secs).padStart(2, '0');
-  const formattedMsecs = String(msecs).padStart(2, '0');
-
-  return `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:${String(msecs).padStart(3, '0')}`;
 }
 
 
@@ -171,26 +171,19 @@ function menu_event_listeners() {
     stoppuhr.restart();
     clear_grid();
     mazeRunner();
+  
+  });
   //save btn
 
-  });document.querySelector("#saveTable").addEventListener("click", (event) => {
+  document.querySelector("#saveTable").addEventListener("click", (event) => {
     const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
     const visited_cell_counter = document.getElementById("visited_cells_counter").value;
     const selectRunner = document.getElementById("selectRunner");
     const algorithmId = selectRunner.value;
   
-    const mins = stoppuhr.mins;
-    const secs = stoppuhr.secs;
-    const msecs = stoppuhr.msecs;
-  
-    const formattedMins = String(mins).padStart(2, '0');
-    const formattedSecs = String(secs).padStart(2, '0');
-    const formattedMsecs = String(msecs).padStart(2, '0');
-  
-    const formattedTime = formatTime(stoppuhr.mins, stoppuhr.secs, stoppuhr.msecs);
-      
-    console.log("gewählter Algorithmus: " + algorithmId + ", Länge gesamt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + ", benötigte Zeit = " + formattedTime);
-  
+    const time = stoppuhr.getTime();
+    const formattedTime = formatTime(time.mins, time.secs, time.msecs);
+
     const data = {
       finalPathCounter: finalpath_cell_counter,
       visitedCellCounter: visited_cell_counter,
@@ -202,9 +195,9 @@ function menu_event_listeners() {
       method: "POST",
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
   });
   
 
