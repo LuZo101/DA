@@ -121,6 +121,7 @@ var stoppuhr = (function () {
       idset("msekunden", msecs);
     },
     getTime: function() {
+      console.log("Current Time:", mins, secs, msecs); // Debugging line
       return { mins, secs, msecs };
     }
   };
@@ -182,8 +183,9 @@ function menu_event_listeners() {
     const algorithmId = selectRunner.value;
   
     const time = stoppuhr.getTime();
+    console.log("Time before formatting:", time); // Debugging line
     const formattedTime = formatTime(time.mins, time.secs, time.msecs);
-
+  
     const data = {
       finalPathCounter: finalpath_cell_counter,
       visitedCellCounter: visited_cell_counter,
