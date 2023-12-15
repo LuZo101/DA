@@ -137,6 +137,15 @@ function clear() {
   }
 }
 
+function formatTime(mins, secs, msecs) {
+  const formattedMins = String(mins).padStart(2, '0');
+  const formattedSecs = String(secs).padStart(2, '0');
+  const formattedMsecs = String(msecs).padStart(2, '0');
+
+  return `${formattedMins}:${formattedSecs}:${formattedMsecs}`;
+}
+
+
 function menu_event_listeners() {
   // Generate Maze
   document.querySelector("#generateMaze").addEventListener("click", (event) => {
@@ -156,21 +165,23 @@ function menu_event_listeners() {
     mazeRunner();
   });
   // Save Button Event Listener
-document.querySelector("#saveTable").addEventListener("click", (event) => {
-  const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
-  const visited_cell_counter = document.getElementById("visited_cells_counter").value;
-  const selectRunner = document.getElementById("selectRunner");
-  const algorithmId = selectRunner.value;
-  const timeTaken = `${String(stoppuhr.mins).padStart(2, '0')}:${String(stoppuhr.secs).padStart(2, '0')}:${String(stoppuhr.msecs).padStart(2, '0')}`;
+  document.querySelector("#saveTable").addEventListener("click", (event) => {
+    const finalpath_cell_counter = document.getElementById("finalpath_cells_counter").value;
+    const visited_cell_counter = document.getElementById("visited_cells_counter").value;
+    const selectRunner = document.getElementById("selectRunner");
+    const algorithmId = selectRunner.value;
+    const formattedTime = formatTime(stoppuhr.mins, stoppuhr.secs, stoppuhr.msecs);
+  
+    console.log("gewählter Algorithmus: " + algorithmId + ", Länge gesamt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + ", benötigte Zeit = " + formattedTime);
+  
+    const data = {
+      finalPathCounter: finalpath_cell_counter,
+      visitedCellCounter: visited_cell_counter,
+      timeTaken: formattedTime,
+      algorithmId
+    };
 
-  console.log("gewählter Algorithmus: " + algorithmId + ", Länge gesamt = " + finalpath_cell_counter + ", Zellen besucht = " + visited_cell_counter + ", benötigte Zeit = " + timeTaken);
-
-  const data = {
-    finalPathCounter: finalpath_cell_counter,
-    visitedCellCounter: visited_cell_counter,
-    timeTaken,
-    algorithmId
-  };
+  
 
   fetch("http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php", {
     method: "POST",
