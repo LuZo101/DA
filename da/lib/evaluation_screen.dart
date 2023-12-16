@@ -5,20 +5,18 @@ import 'package:fl_chart/fl_chart.dart';
 
 class LabyrinthData {
   final int algorithmId;
-  final int pathLength;
   final int cellsVisited;
   final String elapsedTime;
 
-  LabyrinthData(
-      {required this.algorithmId,
-      required this.pathLength,
-      required this.cellsVisited,
-      required this.elapsedTime});
+  LabyrinthData({
+    required this.algorithmId,
+    required this.cellsVisited,
+    required this.elapsedTime,
+  });
 
   factory LabyrinthData.fromJson(Map<String, dynamic> json) {
     return LabyrinthData(
       algorithmId: int.parse(json['algorithm_id'].toString()),
-      pathLength: int.parse(json['path_length'].toString()),
       cellsVisited: int.parse(json['cells_visited'].toString()),
       elapsedTime: json['elapsed_time'].toString(),
     );
@@ -38,7 +36,7 @@ Future<List<LabyrinthData>> fetchLabyrinthData() async {
   }
 }
 
-enum DisplayMode { rawData, barChart }
+enum DisplayMode { rawData, cellsVisitedAndTimeComparison }
 
 class EvaluationScreen extends StatefulWidget {
   const EvaluationScreen({Key? key}) : super(key: key);
@@ -52,24 +50,32 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String appBarTitle = getAppBarTitle();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Auswertung"),
+        title: Text(appBarTitle),
       ),
       body: Column(
         children: [
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                icon: const Icon(Icons.list),
-                onPressed: () =>
-                    setState(() => displayMode = DisplayMode.rawData),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    displayMode = DisplayMode.rawData;
+                  });
+                },
+                child: const Text("Raw Data"),
               ),
-              IconButton(
-                icon: const Icon(Icons.bar_chart),
-                onPressed: () =>
-                    setState(() => displayMode = DisplayMode.barChart),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    displayMode = DisplayMode.cellsVisitedAndTimeComparison;
+                  });
+                },
+                child: const Text("Visited/Time"),
               ),
             ],
           ),
@@ -81,8 +87,9 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
                   switch (displayMode) {
                     case DisplayMode.rawData:
                       return RawDataView(data: snapshot.data!);
-                    case DisplayMode.barChart:
-                      return MyBarChart(data: snapshot.data!);
+                    case DisplayMode.cellsVisitedAndTimeComparison:
+                      return CellsVisitedAndTimeComparisonChart(
+                          data: snapshot.data!);
                     default:
                       return const SizedBox.shrink();
                   }
@@ -96,6 +103,17 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
         ],
       ),
     );
+  }
+
+  String getAppBarTitle() {
+    switch (displayMode) {
+      case DisplayMode.rawData:
+        return "Raw Data View";
+      case DisplayMode.cellsVisitedAndTimeComparison:
+        return "Visited/Time";
+      default:
+        return "";
+    }
   }
 }
 
@@ -112,76 +130,134 @@ class RawDataView extends StatelessWidget {
         var item = data[index];
         return ListTile(
           title: Text(
-              'Pfadlänge: ${item.pathLength}, Besuchte Zellen: ${item.cellsVisited}, Verstrichene Zeit: ${item.elapsedTime}'),
+            '${getAlgorithmName(item.algorithmId)}\n-----------------\nBesuchte Zellen: ${item.cellsVisited}\nVerstrichene Zeit: ${item.elapsedTime}\n',
+          ),
         );
       },
     );
   }
 }
 
-class MyBarChart extends StatelessWidget {
+class CellsVisitedAndTimeComparisonChart extends StatefulWidget {
   final List<LabyrinthData> data;
-  MyBarChart({required this.data});
+
+  CellsVisitedAndTimeComparisonChart({required this.data});
+
+  @override
+  _CellsVisitedAndTimeComparisonChartState createState() =>
+      _CellsVisitedAndTimeComparisonChartState();
+}
+
+class _CellsVisitedAndTimeComparisonChartState
+    extends State<CellsVisitedAndTimeComparisonChart> {
+  Map<int, bool> barTooltipStates = {};
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i = 0; i < widget.data.length; i++) {
+      barTooltipStates[i] = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<BarChartGroupData> barGroups = data.map((e) {
+    List<BarChartGroupData> barGroups =
+        widget.data.asMap().entries.map((entry) {
+      int index = entry.key;
+      LabyrinthData e = entry.value;
+
       return BarChartGroupData(
-        x: e.algorithmId,
+        x: e.algorithmId.toInt(),
         barRods: [
           BarChartRodData(
-            toY: e.pathLength
-                .toDouble(), // Verwenden Sie die Pfadlänge für die Balkenhöhe
+            toY: e.cellsVisited.toDouble(),
             color: getColorForAlgorithmId(e.algorithmId),
-            width: 20,
-            rodStackItems: [
-              BarChartRodStackItem(0, e.pathLength.toDouble(),
-                  getColorForAlgorithmId(e.algorithmId)),
-            ],
-            backDrawRodData: BackgroundBarChartRodData(
-              show: true,
-              toY: e.pathLength.toDouble(),
-              color: getColorForAlgorithmId(e.algorithmId).withOpacity(0.2),
-            ),
+            width: 16,
+          ),
+          BarChartRodData(
+            toY: convertTimeToMilliseconds(e.elapsedTime).toDouble(),
+            color: Colors.orange,
+            width: 16,
           ),
         ],
-        showingTooltipIndicators: [0],
+        showingTooltipIndicators:
+            barTooltipStates[index] ?? false ? [0, 1] : [],
       );
     }).toList();
 
-    return BarChart(
-      BarChartData(
-        barGroups: barGroups,
-        titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (double value, TitleMeta meta) {
-                return SideTitleWidget(
-                  axisSide: meta.axisSide,
-                  space: 16.0,
-                  child: Text(getAlgorithmName(value.toInt())),
-                );
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        width:
+            100.0 * widget.data.length, // Halbiere die Breite für jeden Balken
+        child: BarChart(
+          BarChartData(
+            barGroups: barGroups,
+            gridData: FlGridData(show: false),
+            borderData: FlBorderData(show: false),
+            alignment: BarChartAlignment.spaceAround,
+            groupsSpace: 5, // Halbiere den Abstand zwischen den Balkengruppen
+            barTouchData: BarTouchData(
+              touchCallback:
+                  (FlTouchEvent touchEvent, BarTouchResponse? touchResponse) {
+                if (touchResponse != null && touchResponse.spot != null) {
+                  setState(() {
+                    int index = touchResponse.spot!.touchedBarGroupIndex;
+                    barTooltipStates[index] = !barTooltipStates[index]!;
+                  });
+                }
               },
+              touchTooltipData: BarTouchTooltipData(
+                tooltipBgColor: Colors.blueGrey,
+                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  if (barTooltipStates[group.x.toInt()] == true) {
+                    String descriptor = rodIndex == 0
+                        ? 'Visited Cells: ${rod.toY.round()}'
+                        : 'Time: ${formatMilliseconds(rod.toY.round())}';
+                    return BarTooltipItem(
+                      descriptor,
+                      TextStyle(color: Colors.yellow),
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: true),
-          ),
-        ),
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: Colors.grey,
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              return BarTooltipItem(
-                data[group.x.toInt()].elapsedTime + '\n',
-                TextStyle(color: Colors.white),
-              );
-            },
+            titlesData: FlTitlesData(
+              topTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (double value, TitleMeta meta) {
+                    return SideTitleWidget(
+                      axisSide: meta.axisSide,
+                      space: 4.0,
+                      child: Text(getAlgorithmName(value.toInt())),
+                    );
+                  },
+                ),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  String formatMilliseconds(int milliseconds) {
+    int hundredths = (milliseconds % 1000) ~/ 10;
+    int seconds = (milliseconds ~/ 1000) % 60;
+    int minutes = milliseconds ~/ (1000 * 60);
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}:${hundredths.toString().padLeft(2, '0')}';
   }
 
   Color getColorForAlgorithmId(int algorithmId) {
@@ -193,7 +269,7 @@ class MyBarChart extends StatelessWidget {
       case 3:
         return Colors.green;
       case 4:
-        return Colors.orange;
+        return Color.fromARGB(255, 212, 247, 16);
       default:
         return Colors.grey;
     }
