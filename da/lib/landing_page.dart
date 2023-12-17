@@ -8,14 +8,14 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Landing Page'),
+        title: const Text('Welcome'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _buildButton(
-                context, 'Zu den Algos', "http://192.168.1.144/DA/Robin-Star-Algorythm/", false, true),
+            _buildButton(context, 'Zu den Algos',
+                "http://192.168.1.144/DA/Robin-Star-Algorythm/", false, true),
             _buildButton(
                 context, 'Homepage', "https://www.bulme.at/", false, false),
             _buildButton(

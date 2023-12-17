@@ -30,7 +30,12 @@ Future<List<LabyrinthData>> fetchLabyrinthData() async {
 
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
-    return data.map((json) => LabyrinthData.fromJson(json)).toList();
+    // Umkehren der Liste, sodass die neuesten Einträge zuerst erscheinen
+    return data
+        .map((json) => LabyrinthData.fromJson(json))
+        .toList()
+        .reversed
+        .toList();
   } else {
     throw Exception('Failed to load labyrinth data');
   }

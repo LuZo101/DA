@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 $servername = "192.168.1.144";
 $username = "root";
 $password = "RbPiAkift23!";
@@ -17,7 +14,7 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
-        error_log("Received POST data: " . print_r($data, true)); // Log received data
+        error_log("Received POST data: " . print_r($data, true));
 
         if (!isset($data['finalPathCounter'], $data['visitedCellCounter'], $data['timeTaken'], $data['algorithmId'])) {
             throw new Exception("Invalid input data");
@@ -47,7 +44,7 @@ try {
         echo json_encode($data);
     }
 } catch (Exception $e) {
-    error_log("Exception: " . $e->getMessage()); // More specific error logging
+    error_log("Exception: " . $e->getMessage());
     echo json_encode(["error" => "An error occurred: " . $e->getMessage()]);
 } finally {
     if (isset($conn)) {

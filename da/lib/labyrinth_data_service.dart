@@ -4,7 +4,7 @@ import 'dart:convert';
 class LabyrinthData {
   final int pathLength;
   final int cellsVisited;
-  final String elapsedTime; // Änderung hier
+  final String elapsedTime;
 
   LabyrinthData(
       {required this.pathLength,
@@ -15,7 +15,7 @@ class LabyrinthData {
     return LabyrinthData(
       pathLength: int.parse(json['path_length'].toString()),
       cellsVisited: int.parse(json['cells_visited'].toString()),
-      elapsedTime: json['elapsed_time'], // Keine Konvertierung erforderlich
+      elapsedTime: json['elapsed_time'],
     );
   }
 }
@@ -32,8 +32,6 @@ class LabyrinthDataService {
       throw Exception('Failed to load labyrinth data');
     }
   }
-
-  // Hier können Sie weitere Methoden hinzufügen, falls benötigt
 }
 
 int convertTimeToMilliseconds(String timeString) {
