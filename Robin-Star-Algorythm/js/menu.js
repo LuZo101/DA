@@ -24,7 +24,7 @@ function initMenu() {
   if (isPortrait) {
     // In portrait mode, the menu should be full-width at the bottom of the viewport.
     menu.style.width = '100%';
-    menu.style.height = '25vh'; // or whatever height you want it to be
+    menu.style.height = '30vh'; // or whatever height you want it to be
     menu.style.position = 'fixed';
     menu.style.bottom = '0';
     menu.style.left = '0';
@@ -32,7 +32,7 @@ function initMenu() {
     // The visualizer should take the remaining space.
     visualizer.style.position = 'absolute';
     visualizer.style.top = '0';
-    visualizer.style.bottom = '25vh'; // same height as the menu
+    visualizer.style.bottom = '30vh'; // same height as the menu
     visualizer.style.width = '100%';
     visualizer.style.height = 'auto';
   } else {
