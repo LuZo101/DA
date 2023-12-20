@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 
+/// Repräsentiert einen einzelnen Datensatz aus dem Labyrinth-Experiment.
 class LabyrinthData {
   final int algorithmId;
   final int cellsVisited;
@@ -14,6 +15,7 @@ class LabyrinthData {
     required this.elapsedTime,
   });
 
+  /// Erstellt ein LabyrinthData-Objekt aus JSON-Daten.
   factory LabyrinthData.fromJson(Map<String, dynamic> json) {
     return LabyrinthData(
       algorithmId: int.parse(json['algorithm_id'].toString()),
@@ -23,6 +25,7 @@ class LabyrinthData {
   }
 }
 
+/// Ruft Labyrinth-Daten asynchron vom Backend ab.
 Future<List<LabyrinthData>> fetchLabyrinthData() async {
   final url =
       Uri.parse('http://192.168.1.144/DA/Robin-Star-Algorythm/insertData.php');
@@ -30,19 +33,21 @@ Future<List<LabyrinthData>> fetchLabyrinthData() async {
 
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(response.body);
-    // Umkehren der Liste, sodass die neuesten Einträge zuerst erscheinen
+    // Umkehren der Liste, sodass die neuesten Einträge zuerst erscheinen.
     return data
         .map((json) => LabyrinthData.fromJson(json))
         .toList()
         .reversed
         .toList();
   } else {
-    throw Exception('Failed to load labyrinth data');
+    throw Exception('Fehler beim Laden der Labyrinth-Daten');
   }
 }
 
+/// Enumeration für verschiedene Anzeigemodi.
 enum DisplayMode { rawData, cellsVisitedAndTimeComparison }
 
+/// Haupt-Widget zur Darstellung des Auswertungsbildschirms.
 class EvaluationScreen extends StatefulWidget {
   const EvaluationScreen({Key? key}) : super(key: key);
 
@@ -110,10 +115,11 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
     );
   }
 
+  /// Gibt den Titel der App-Leiste basierend auf dem aktuellen Anzeigemodus zurück.
   String getAppBarTitle() {
     switch (displayMode) {
       case DisplayMode.rawData:
-        return "Raw Data View";
+        return "Raw Data";
       case DisplayMode.cellsVisitedAndTimeComparison:
         return "Visited/Time";
       default:
@@ -122,6 +128,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
   }
 }
 
+/// Widget zur Anzeige der Rohdaten in einer Liste.
 class RawDataView extends StatelessWidget {
   final List<LabyrinthData> data;
 
@@ -143,6 +150,7 @@ class RawDataView extends StatelessWidget {
   }
 }
 
+/// Widget zur Anzeige eines Balkendiagramms mit vergleichenden Daten.
 class CellsVisitedAndTimeComparisonChart extends StatefulWidget {
   final List<LabyrinthData> data;
 
@@ -160,6 +168,7 @@ class _CellsVisitedAndTimeComparisonChartState
   @override
   void initState() {
     super.initState();
+    // Initialisiert den Zustand jedes Balkens auf 'false' (Tooltip nicht sichtbar).
     for (var i = 0; i < widget.data.length; i++) {
       barTooltipStates[i] = false;
     }
@@ -172,18 +181,33 @@ class _CellsVisitedAndTimeComparisonChartState
       int index = entry.key;
       LabyrinthData e = entry.value;
 
+      // Erstellt eine Gruppe von Balkendiagrammen für jeden Datensatz.
       return BarChartGroupData(
         x: e.algorithmId.toInt(),
         barRods: [
           BarChartRodData(
             toY: e.cellsVisited.toDouble(),
             color: getColorForAlgorithmId(e.algorithmId),
-            width: 16,
+            width: 30,
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: MediaQuery.of(context)
+                  .size
+                  .height, // Verwendet die Bildschirmhöhe
+              color: Colors.transparent,
+            ),
           ),
           BarChartRodData(
             toY: convertTimeToMilliseconds(e.elapsedTime).toDouble(),
             color: Colors.orange,
-            width: 16,
+            width: 30,
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: MediaQuery.of(context)
+                  .size
+                  .height, // Verwendet die Bildschirmhöhe
+              color: Colors.transparent,
+            ),
           ),
         ],
         showingTooltipIndicators:
@@ -193,63 +217,87 @@ class _CellsVisitedAndTimeComparisonChartState
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(
-        width:
-            100.0 * widget.data.length, // Halbiere die Breite für jeden Balken
-        child: BarChart(
-          BarChartData(
-            barGroups: barGroups,
-            gridData: FlGridData(show: false),
-            borderData: FlBorderData(show: false),
-            alignment: BarChartAlignment.spaceAround,
-            groupsSpace: 5, // Halbiere den Abstand zwischen den Balkengruppen
-            barTouchData: BarTouchData(
-              touchCallback:
-                  (FlTouchEvent touchEvent, BarTouchResponse? touchResponse) {
-                if (touchResponse != null && touchResponse.spot != null) {
-                  setState(() {
-                    int index = touchResponse.spot!.touchedBarGroupIndex;
-                    barTooltipStates[index] = !barTooltipStates[index]!;
-                  });
-                }
-              },
-              touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: Colors.blueGrey,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                  if (barTooltipStates[group.x.toInt()] == true) {
-                    String descriptor = rodIndex == 0
-                        ? 'Visited Cells: ${rod.toY.round()}'
-                        : 'Time: ${formatMilliseconds(rod.toY.round())}';
-                    return BarTooltipItem(
-                      descriptor,
-                      TextStyle(color: Colors.yellow),
-                    );
+      child: GestureDetector(
+        onTapUp: (details) {
+          // Bestimmt den Index des Balkens, der angeklickt wurde.
+          double tappingX = details.localPosition.dx;
+          double chartWidth = context.size!.width;
+          double screenHeight = MediaQuery.of(context).size.height;
+          int touchedBarIndex =
+              (tappingX / chartWidth * widget.data.length).floor();
+
+          // Aktualisiert den Zustand des Tooltips basierend auf der Bildschirmhöhe.
+          if (details.localPosition.dy <= screenHeight * .9) {
+            setState(() {
+              barTooltipStates[touchedBarIndex] =
+                  !barTooltipStates[touchedBarIndex]!;
+            });
+          }
+        },
+        child: Container(
+          width: 100.0 * widget.data.length, // Breite des Diagramms.
+          child: BarChart(
+            BarChartData(
+              barGroups: barGroups,
+              gridData: FlGridData(show: false),
+              borderData: FlBorderData(show: false),
+              alignment: BarChartAlignment.spaceAround,
+              groupsSpace: 5,
+              barTouchData: BarTouchData(
+                touchCallback:
+                    (FlTouchEvent touchEvent, BarTouchResponse? touchResponse) {
+                  // Behandelt Touch-Interaktionen mit dem Diagramm.
+                  if (touchResponse != null && touchResponse.spot != null) {
+                    setState(() {
+                      int index = touchResponse.spot!.touchedBarGroupIndex;
+                      barTooltipStates[index] = !barTooltipStates[index]!;
+                    });
                   }
-                  return null;
                 },
-              ),
-            ),
-            titlesData: FlTitlesData(
-              topTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (double value, TitleMeta meta) {
-                    return SideTitleWidget(
-                      axisSide: meta.axisSide,
-                      space: 4.0,
-                      child: Text(getAlgorithmName(value.toInt())),
-                    );
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.blueGrey,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    // Generiert die Tooltips für die Balken.
+                    if (barTooltipStates[group.x.toInt()] == true) {
+                      String descriptor = rodIndex == 0
+                          ? 'Besuchte Zellen: ${rod.toY.round()}'
+                          : 'Zeit: ${formatMilliseconds(rod.toY.round())}';
+                      return BarTooltipItem(
+                        descriptor,
+                        TextStyle(color: Colors.yellow),
+                      );
+                    }
+                    return null;
                   },
+                  tooltipMargin: 8, // Abstand des Tooltips vom Balken
+                  tooltipPadding:
+                      EdgeInsets.all(8), // Innenabstand des Tooltips
+                  fitInsideHorizontally:
+                      true, //  Anpassung innerhalb der horizontalen Grenzen
+                  fitInsideVertically:
+                      true, //  Anpassung innerhalb der vertikalen Grenzen
                 ),
               ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+              titlesData: FlTitlesData(
+                topTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (double value, TitleMeta meta) {
+                      // Erzeugt die Beschriftungen für die X-Achse.
+                      return SideTitleWidget(
+                        axisSide: meta.axisSide,
+                        space: 4.0,
+                        child: Text(getAlgorithmName(value.toInt())),
+                      );
+                    },
+                  ),
+                ),
+                leftTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
             ),
           ),
